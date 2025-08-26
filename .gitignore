@@ -1,0 +1,3 @@
+TerraformCourse/.terraform/
+TerraformCource/*.tfstate
+TerraformCource/*.tfstate.backup
