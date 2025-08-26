@@ -16,9 +16,9 @@ resource "aws_vpc" "vpc" {
   cidr_block = var.vpc_cidr
   tags = {
     Name        = var.vpc_name
-    Environment = "demo_environment"
+    Environment = var.environment
     Terraform   = "true"
-    Region = data.aws_region.current.name
+    Region      = data.aws_region.current.name
   }
 }
 #Deploy the private subnets
@@ -140,4 +140,19 @@ resource "aws_subnet" "variables-subnet" {
     Name      = "sub-variables-${var.variables_sub_az}"
     Terraform = "true"
   }
+}
+module "subnet_addrs" {
+  source          = "hashicorp/subnets/cidr"
+  version         = "1.0.0"
+  base_cidr_block = "10.0.0.0/22"
+  networks = [
+    {
+      name     = "module_network_a"
+      new_bits = 2
+    },
+    {
+      name     = "module_network_b"
+      new_bits = 2
+    },
+  ]
 }
