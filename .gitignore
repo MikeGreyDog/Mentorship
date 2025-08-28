@@ -1,3 +1,4 @@
 TerraformCourse/.terraform/
 TerraformCourse/*.tfstate
 TerraformCourse/*.tfstate.backup
+TerraformCourse/*.pem
