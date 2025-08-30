@@ -2,3 +2,5 @@ TerraformCourse/.terraform/
 TerraformCourse/*.tfstate
 TerraformCourse/*.tfstate.backup
 TerraformCourse/*.pem
+TerraformCourse/terraform.tfstate.d/
+TerraformCourse/terraform_log.txt

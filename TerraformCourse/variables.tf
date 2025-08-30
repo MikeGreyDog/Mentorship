@@ -1,6 +1,6 @@
 variable "aws_region" {
   type    = string
-  default = "us-east-1"
+  default = "us-west-2"
 }
 variable "vpc_name" {
   type    = string
@@ -37,7 +37,7 @@ variable "variables_sub_cidr" {
 variable "variables_sub_az" {
   description = "az variable"
   type        = string
-  default     = "us-east-1a"
+  default     = "us-west-2a"
 }
 variable "variables_sub_auto_ip" {
   description = "set auto ip variable"
