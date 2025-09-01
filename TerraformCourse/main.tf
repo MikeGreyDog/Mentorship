@@ -126,38 +126,6 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"]
 }
 
-resource "aws_instance" "web" {
-  ami                         = data.aws_ami.ubuntu.id
-  instance_type               = var.ec2_instance_type
-  subnet_id                   = aws_subnet.public_subnets["public_subnet_1"].id
-  security_groups             = [aws_security_group.web-server-sg.id]
-  associate_public_ip_address = true
-  key_name                    = aws_key_pair.generated.key_name
-  connection {
-    user        = "ubuntu"
-    private_key = tls_private_key.generated.private_key_pem
-    host        = self.public_ip
-  }
-  provisioner "local-exec" {
-    command = "chmod 600 ${local_file.private_key_pem.filename}"
-  }
-  provisioner "remote-exec" {
-    inline = [
-      "sudo rm -rf /tmp",
-      "sudo git clone https://github.com/hashicorp/demo-terraform-101 /tmp",
-      "sudo sh /tmp/assets/setup-web.sh"
-    ]
-  }
-  tags = {
-    Name  = local.server_name
-    Owner = local.team
-    App   = local.application
-  }
-  lifecycle {
-    ignore_changes = [security_groups]
-  }
-}
-
 resource "aws_subnet" "variables-subnet" {
   vpc_id                  = aws_vpc.vpc.id
   cidr_block              = var.variables_sub_cidr
@@ -228,4 +196,23 @@ resource "aws_security_group" "web-server-sg" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+}
+module "server" {
+  source    = "./modules/server"
+  ami       = data.aws_ami.ubuntu.id
+  subnet_id = aws_subnet.public_subnets["public_subnet_1"].id
+  security_groups = [
+    aws_security_group.web-server-sg.id
+  ]
+}
+module "web-server" {
+  source    = "./modules/web-server"
+  ami       = data.aws_ami.ubuntu.id
+  subnet_id = aws_subnet.public_subnets["public_subnet_2"].id
+  security_groups = [
+    aws_security_group.web-server-sg.id
+  ]
+  keyname = aws_key_pair.generated.key_name
+  private_key = tls_private_key.generated.private_key_pem
+  private_key_location = local_file.private_key_pem.filename
 }

@@ -11,5 +11,13 @@ output "vpc_id" {
 }
 output "public_url" {
   description = "Public URL of Web Server"
-  value       = "http://${aws_instance.web.public_ip}:80/index.html"
+  value       = module.web-server.public_url
 }
+/*
+output "module_server_public_ip" {
+  value = module.server.public_ip
+}
+output "module_server_public_dns" {
+  value = module.server.public_dns
+}
+*/
