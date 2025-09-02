@@ -13,11 +13,12 @@ output "public_url" {
   description = "Public URL of Web Server"
   value       = module.web-server.public_url
 }
-/*
 output "module_server_public_ip" {
   value = module.server.public_ip
 }
 output "module_server_public_dns" {
   value = module.server.public_dns
 }
-*/
+output "s3_bucket_name" {
+  value = module.s3-bucket.s3_bucket_bucket_domain_name
+}

@@ -197,6 +197,8 @@ resource "aws_security_group" "web-server-sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+
+# Work with modules (local and remote sources)
 module "server" {
   source    = "./modules/server"
   ami       = data.aws_ami.ubuntu.id
@@ -212,7 +214,28 @@ module "web-server" {
   security_groups = [
     aws_security_group.web-server-sg.id
   ]
-  keyname = aws_key_pair.generated.key_name
-  private_key = tls_private_key.generated.private_key_pem
+  keyname              = aws_key_pair.generated.key_name
+  private_key          = tls_private_key.generated.private_key_pem
   private_key_location = local_file.private_key_pem.filename
 }
+module "s3-bucket" {
+  source  = "terraform-aws-modules/s3-bucket/aws"
+  version = "2.11.1"
+}
+/*
+module "vpc" {
+  source             = "terraform-aws-modules/vpc/aws"
+  version            = "6.0.1"
+  name               = "my-vpc-terraform"
+  cidr               = "10.0.0.0/16"
+  azs                = ["us-west-2a", "us-west-2b", "us-west-2c"]
+  private_subnets    = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+  public_subnets     = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
+  enable_nat_gateway = true
+  enable_vpn_gateway = true
+  tags = {
+    Name      = "VPC from module"
+    Terraform = "true"
+  }
+}
+*/
