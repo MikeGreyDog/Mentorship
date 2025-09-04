@@ -1,6 +1,11 @@
 # Configure the AWS Provider
 provider "aws" {
   region = var.aws_region
+  default_tags {
+    tags = {
+      Environment = terraform.workspace
+    }
+  }
 }
 #Retrieve the list of AZs in the current AWS region
 data "aws_availability_zones" "available" {}
@@ -16,9 +21,9 @@ resource "aws_vpc" "vpc" {
   cidr_block = var.vpc_cidr
   tags = {
     Name        = var.vpc_name
-    Environment = "demo_environment"
+    Environment = var.environment
     Terraform   = "true"
-    Region = data.aws_region.current.name
+    Region      = data.aws_region.current.name
   }
 }
 #Deploy the private subnets
@@ -121,16 +126,6 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"]
 }
 
-resource "aws_instance" "web" {
-  ami           = data.aws_ami.ubuntu.id
-  instance_type = var.ec2_instance_type
-  subnet_id     = aws_subnet.public_subnets["public_subnet_1"].id
-  tags = {
-    Name  = local.server_name
-    Owner = local.team
-    App   = local.application
-  }
-}
 resource "aws_subnet" "variables-subnet" {
   vpc_id                  = aws_vpc.vpc.id
   cidr_block              = var.variables_sub_cidr
@@ -141,3 +136,106 @@ resource "aws_subnet" "variables-subnet" {
     Terraform = "true"
   }
 }
+module "subnet_addrs" {
+  source          = "hashicorp/subnets/cidr"
+  version         = "1.0.0"
+  base_cidr_block = "10.0.0.0/22"
+  networks = [
+    {
+      name     = "module_network_a"
+      new_bits = 2
+    },
+    {
+      name     = "module_network_b"
+      new_bits = 2
+    },
+  ]
+}
+resource "tls_private_key" "generated" {
+  algorithm = "RSA"
+}
+resource "local_file" "private_key_pem" {
+  content  = tls_private_key.generated.private_key_pem
+  filename = "MyAWSKey.pem"
+}
+resource "aws_key_pair" "generated" {
+  key_name   = "MyAWSKey"
+  public_key = tls_private_key.generated.public_key_openssh
+  lifecycle {
+    ignore_changes = [key_name]
+  }
+}
+resource "aws_security_group" "web-server-sg" {
+  name   = "allow-all-ssh-and-web"
+  vpc_id = aws_vpc.vpc.id
+  ingress {
+    cidr_blocks = [
+      "0.0.0.0/0"
+    ]
+    from_port = 22
+    to_port   = 22
+    protocol  = "tcp"
+  }
+  ingress {
+    description = "Allow Port 80"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+    description = "Allow Port 443"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+# Work with modules (local and remote sources)
+module "server" {
+  source    = "./modules/server"
+  ami       = data.aws_ami.ubuntu.id
+  subnet_id = aws_subnet.public_subnets["public_subnet_1"].id
+  security_groups = [
+    aws_security_group.web-server-sg.id
+  ]
+}
+module "web-server" {
+  source    = "./modules/web-server"
+  ami       = data.aws_ami.ubuntu.id
+  subnet_id = aws_subnet.public_subnets["public_subnet_2"].id
+  security_groups = [
+    aws_security_group.web-server-sg.id
+  ]
+  keyname              = aws_key_pair.generated.key_name
+  private_key          = tls_private_key.generated.private_key_pem
+  private_key_location = local_file.private_key_pem.filename
+}
+module "s3-bucket" {
+  source  = "terraform-aws-modules/s3-bucket/aws"
+  version = "2.11.1"
+}
+/*
+module "vpc" {
+  source             = "terraform-aws-modules/vpc/aws"
+  version            = "6.0.1"
+  name               = "my-vpc-terraform"
+  cidr               = "10.0.0.0/16"
+  azs                = ["us-west-2a", "us-west-2b", "us-west-2c"]
+  private_subnets    = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+  public_subnets     = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
+  enable_nat_gateway = true
+  enable_vpn_gateway = true
+  tags = {
+    Name      = "VPC from module"
+    Terraform = "true"
+  }
+}
+*/
