@@ -3,12 +3,12 @@
 
 ## TF Cloud
 
-  * [ ] create account
-  * [ ] create organization 'tf-test'
-  * [ ] Add new user to the Organization (oleg.platonenko@outlook.com) with RO access
+  * [X] create account
+  * [X] create organization 'tf-test'
+  * [X] Add new user to the Organization (oleg.platonenko@outlook.com) with RO access
 
 ## AWS
 
-  * [ ] Setup SSO
-  * [ ] Setup Billing Alarms ($5 threshold)
-  * [ ] Create Terraform IAM user
+  * [X] Setup SSO
+  * [X] Setup Billing Alarms ($5 threshold)
+  * [X] Create Terraform IAM user
