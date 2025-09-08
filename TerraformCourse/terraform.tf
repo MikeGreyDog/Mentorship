@@ -1,4 +1,9 @@
 terraform {
+  backend "s3" {
+    bucket = "my-terraform-state-mikegd"
+    key    = "prod/aws_infra"
+    region = "us-west-2"
+  }
   required_version = ">=1.12.0"
   required_providers {
     aws = {

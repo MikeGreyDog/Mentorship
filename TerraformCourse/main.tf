@@ -3,7 +3,8 @@ provider "aws" {
   region = var.aws_region
   default_tags {
     tags = {
-      Environment = terraform.workspace
+      Environment = var.environment
+      Terraform   = "true"
     }
   }
 }
@@ -20,10 +21,8 @@ locals {
 resource "aws_vpc" "vpc" {
   cidr_block = var.vpc_cidr
   tags = {
-    Name        = var.vpc_name
-    Environment = var.environment
-    Terraform   = "true"
-    Region      = data.aws_region.current.name
+    Name   = var.vpc_name
+    Region = data.aws_region.current.name
   }
 }
 #Deploy the private subnets
@@ -33,8 +32,7 @@ resource "aws_subnet" "private_subnets" {
   cidr_block        = cidrsubnet(var.vpc_cidr, 8, each.value)
   availability_zone = tolist(data.aws_availability_zones.available.names)[each.value]
   tags = {
-    Name      = each.key
-    Terraform = "true"
+    Name = each.key
   }
 }
 #Deploy the public subnets
@@ -45,8 +43,7 @@ resource "aws_subnet" "public_subnets" {
   availability_zone       = tolist(data.aws_availability_zones.available.names)[each.value]
   map_public_ip_on_launch = true
   tags = {
-    Name      = each.key
-    Terraform = "true"
+    Name = each.key
   }
 }
 #Create route tables for public and private subnets
@@ -58,8 +55,7 @@ resource "aws_route_table" "public_route_table" {
     #nat_gateway_id = aws_nat_gateway.nat_gateway.id
   }
   tags = {
-    Name      = "demo_public_rtb"
-    Terraform = "true"
+    Name = "demo_public_rtb"
   }
 }
 resource "aws_route_table" "private_route_table" {
@@ -70,8 +66,7 @@ resource "aws_route_table" "private_route_table" {
     nat_gateway_id = aws_nat_gateway.nat_gateway.id
   }
   tags = {
-    Name      = "demo_private_rtb"
-    Terraform = "true"
+    Name = "demo_private_rtb"
   }
 }
 #Create route table associations
@@ -132,8 +127,7 @@ resource "aws_subnet" "variables-subnet" {
   availability_zone       = var.variables_sub_az
   map_public_ip_on_launch = var.variables_sub_auto_ip
   tags = {
-    Name      = "sub-variables-${var.variables_sub_az}"
-    Terraform = "true"
+    Name = "sub-variables-${var.variables_sub_az}"
   }
 }
 module "subnet_addrs" {
@@ -235,7 +229,6 @@ module "vpc" {
   enable_vpn_gateway = true
   tags = {
     Name      = "VPC from module"
-    Terraform = "true"
   }
 }
 */

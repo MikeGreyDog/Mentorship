@@ -4,7 +4,6 @@ resource "aws_instance" "web2" {
   subnet_id              = var.subnet_id
   vpc_security_group_ids = var.security_groups
   tags = {
-    "Name"        = "Server from Module"
-    "Environment" = "Training"
+    "Name" = "Server from Module"
   }
 }
