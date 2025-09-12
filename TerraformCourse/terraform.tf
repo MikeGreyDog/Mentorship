@@ -1,15 +1,13 @@
 terraform {
   backend "s3" {
-    bucket = "my-terraform-state-mikegd"
-    key    = "prod/aws_infra"
-    region = "us-west-2"
+    bucket         = "my-terraform-state-mikegd"
+    key            = "dev/aws_infra"
+    region         = "us-west-2"
+    dynamodb_table = "terraform-lock"
+    encrypt        = true
   }
   required_version = ">=1.12.0"
   required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 6.0"
-    }
     random = {
       source  = "hashicorp/random"
       version = ">= 3.1.0"
