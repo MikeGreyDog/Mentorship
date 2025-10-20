@@ -27,27 +27,15 @@ resource "aws_key_pair" "generated" {
 resource "aws_security_group" "web-server-sg" {
   name   = "allow-all-ssh-and-web"
   vpc_id = module.vpc.vpc_id
-  ingress {
-    cidr_blocks = [
-      "0.0.0.0/0"
-    ]
-    from_port = 22
-    to_port   = 22
-    protocol  = "tcp"
-  }
-  ingress {
-    description = "Allow Port 80"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  ingress {
-    description = "Allow Port 443"
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+  dynamic "ingress" {
+    for_each = var.ports
+    content {
+      from_port   = ingress.value
+      to_port     = ingress.value
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+      description = "Allow ${ingress.key} access on port ${ingress.value}"
+    }
   }
   egress {
     from_port   = 0
@@ -59,17 +47,19 @@ resource "aws_security_group" "web-server-sg" {
 
 # Work with modules (local and remote sources)
 module "server" {
-  source    = "./modules/server"
-  ami       = data.aws_ami.ubuntu.id
-  subnet_id = module.vpc.public_subnet_ids["public_subnet_1"]
+  source      = "./modules/server"
+  ami         = data.aws_ami.ubuntu.id
+  environment = var.environment
+  subnet_id   = module.vpc.public_subnet_ids["public_subnet_1"]
   security_groups = [
     aws_security_group.web-server-sg.id
   ]
 }
 module "web-server" {
-  source    = "./modules/web-server"
-  ami       = data.aws_ami.ubuntu.id
-  subnet_id = module.vpc.public_subnet_ids["public_subnet_2"]
+  source      = "./modules/web-server"
+  ami         = data.aws_ami.ubuntu.id
+  environment = var.environment
+  subnet_id   = module.vpc.public_subnet_ids["public_subnet_2"]
   security_groups = [
     aws_security_group.web-server-sg.id
   ]

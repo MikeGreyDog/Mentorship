@@ -16,7 +16,19 @@ variable "ec2_instance_type" {
   }
 }
 variable "environment" {
-  description = "env"
+  description = "Environment. QA and PROD values should be set by TF_VAR_environment environment variable"
   type        = string
   default     = "dev"
+  validation {
+    condition     = contains(["dev", "qa", "prod"], var.environment)
+    error_message = "Allowed values: dev, qa, prod. Value should be set by TF_VAR_environment environment variable"
+  }
+}
+variable "ports" {
+  type = map(number)
+  default = {
+    ssh   = 22
+    http  = 80
+    https = 443
+  }
 }
