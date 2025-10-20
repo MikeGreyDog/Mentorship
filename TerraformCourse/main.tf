@@ -72,6 +72,6 @@ module "s3-bucket" {
   version = "2.11.1"
 }
 module "vpc" {
-  source   = "./modules/vpc"
+  source   = "git::https://github.com/MikeGreyDog/terraform-aws-vpc.git?ref=v0.0.1"
   vpc_name = "main-vpc"
 }
