@@ -24,6 +24,6 @@ resource "aws_instance" "web" {
     ignore_changes = [security_groups]
   }
   tags = {
-    "Name" = "Web-Server"
+    "Name" = "${var.environment}-Web-Server"
   }
 }

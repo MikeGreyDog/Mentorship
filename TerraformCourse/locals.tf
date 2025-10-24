@@ -1,9 +1,9 @@
 locals {
   tags = {
     Project_name = "mentorship_project"
-    Environment  = "dev"
+    Environment  = var.environment
     Terraform    = "true"
   }
-  application = "TestApp"
+  application = "${var.environment}-TestApp"
   server_name = "ec2-${var.environment}-${local.application}"
 }

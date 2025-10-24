@@ -11,3 +11,7 @@ variable "security_groups" {
 variable "keyname" {}
 variable "private_key" {}
 variable "private_key_location" {}
+variable "environment" {
+  description = "Environment. QA and PROD values should be set by TF_VAR_environment environment variable"
+  type        = string
+}
