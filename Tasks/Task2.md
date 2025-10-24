@@ -2,26 +2,26 @@
 
 ## GitHub
 
-- [ ] Create repository `terraform-aws-vpc`
-- [ ] `main` branch to be used as a default one
+- [X] Create repository `terraform-aws-vpc`
+- [X] `main` branch to be used as a default one
 
 ## Terraform
 
 ### Modules repo
 
-- [ ] Move all the code related to VPC to `terraform-aws-vpc`
-- [ ] Replace subnet CIDRs definition with a function 'cidrsubnet'. Numer of subnets has to be the same
+- [X] Move all the code related to VPC to `terraform-aws-vpc`
+- [X] Replace subnet CIDRs definition with a function 'cidrsubnet'. Numer of subnets has to be the same
 - [ ] Inspect usage of **heredocs** for variables descriptions for multiline definitions and use them in the module
 - [ ] Add a mandatory tag from a module `Module="VPC"`
-- [ ] Tag main branch in the repository with `v0.0.1`
+- [X] Tag main branch in the repository with `v0.0.1`
 
 ### Environments repo (TerraformCourse)
 
-- [ ] Call the VPC Module from the environment configuration, with a version definition
+- [X] Call the VPC Module from the environment configuration, with a version definition
 - [ ] Add provisioner to the configuration which will call AWS API via aws cli and output the list of VPCs in the account to a file 'vpcs.txt'
 - [ ] Add another provisioner will output all subnet CIDRs to a file 'subnets.txt' by using 'self' object
 - [ ] Add another provisioner which will delete a local file 'vpcs.txt' when the VPC is destroyed
-- [ ] Deploy an S3 bucket from a public module (with the bare minimum configuration)
+- [X] Deploy an S3 bucket from a public module (with the bare minimum configuration)
 
 Optional:
 
