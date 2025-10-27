@@ -1,4 +1,13 @@
 terraform {
+  /*
+  backend "remote" {
+    hostname = "app.terraform.io"
+    organization = "tf-test-mtitko"
+    workspaces {
+      name = "mentorship-cli"
+    }
+  }
+  */
   backend "s3" {
     bucket         = "my-terraform-state-mikegd"
     key            = "dev/aws_infra"
