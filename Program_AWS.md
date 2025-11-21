@@ -2,8 +2,8 @@
 | Topic                                  | Dates            |  Comments                                                                                        |
 |----------------------------------------|------------------|--------------------------------------------------------------------------------------------------|
 | EC2, AMI, SSM                          | 27 Oct - 31 Oct  |                                                                                                  |
-| EC2 HA & Scalability, Beanstalk        | 3  Nov - 7  Nov  |   17 Nov - we are here                                                                           |
-| CloudFormation, Lambda                 | 10 Nov - 14 Nov  |                                                                                                  |
+| EC2 HA & Scalability, Beanstalk        | 3  Nov - 7  Nov  |                                                                                                  |
+| CloudFormation, Lambda                 | 10 Nov - 14 Nov  |    21 Nov - we are here                                                                          |
 | EBS, EFS, S3, Athena                   | 17 Nov - 21 Nov  |                                                                                                  |
 | S3 Security, Advanced Storage, CF, DBs | 24 Nov - 28 Nov  |                                                                                                  |
 | Monitoring, Account Management, DR     | 1  Dec - 5  Dec  |                                                                                                  |
