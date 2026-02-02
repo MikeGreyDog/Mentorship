@@ -4,8 +4,8 @@
 | EC2, AMI, SSM                          | 27 Oct - 31 Oct  |                                                                                                  |
 | EC2 HA & Scalability, Beanstalk        | 3  Nov - 7  Nov  |                                                                                                  |
 | CloudFormation, Lambda                 | 10 Nov - 14 Nov  |                                                                                                  |
-| EBS, EFS, S3, Athena                   | 5 Jan  - 9 Jan   |           16 Jan - we are here (S3 section)                                                      |
-| S3 Security, Advanced Storage, CF, DBs | 12 Jan - 16 Jan  |                                                                                                  |
+| EBS, EFS, S3, Athena                   | 5 Jan  - 9 Jan   |                                                                                                  |
+| S3 Security, Advanced Storage, CF, DBs | 12 Jan - 16 Jan  |               2 Feb - we are here (Advanced Storage, CF)                                         |
 | Monitoring, Account Management, DR     | 19 Jan - 23 Jan  |                                                                                                  |
 | Secutiry, Identiry, Route 53           | 26 Jan - 30 Jan  |                                                                                                  |
 | VPC                                    | 2 Feb  - 6 Feb   |                                                                                                  |
